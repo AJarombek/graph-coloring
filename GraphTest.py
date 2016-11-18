@@ -22,6 +22,12 @@ def test():
     for v in coloring:
         print(v[0], "-->", v[1])
 
+    # Test the Brelaz Graph Coloring Algorithm
+    coloring = graphcoloring.brelaz()
+    print("Brelaz Graph Coloring:")
+    for v in coloring:
+        print(v[0], "-->", v[1])
+
 
 if __name__ == '__main__':
     test()

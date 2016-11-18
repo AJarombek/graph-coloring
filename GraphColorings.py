@@ -54,3 +54,12 @@ class GraphColorings(object):
             usedColors += 1
 
         return coloredList
+
+    # Graph Coloring Algorithm #1 - Welsh-Powell
+    def brelaz(self):
+        degreeSet = self.graph.vertexDegreeSet()
+        degreeList = list(degreeSet)
+
+        # Sort the list of tuples using a lambda function
+        degreeList = sorted(degreeList, reverse=True,
+                            key=lambda x: x[1])
