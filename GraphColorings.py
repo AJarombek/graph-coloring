@@ -17,4 +17,23 @@ class GraphColorings(object):
         degreeList = list(degreeSet)
 
         # Sort the list of tuples using a lambda function
-        degreeList = sorted(degreeList, key=lambda x: x[1])
+        degreeList = sorted(degreeList, reverse=True,
+                            key=lambda x: x[1])
+
+        coloredList = list()
+        colors = list()
+        usedColors = 0
+        colors.append(usedColors)
+
+        while len(degreeList) != 0:
+            for v in degreeList:
+                if len(coloredList) == 0:
+                    colored = (v[0], usedColors)
+                    coloredList.append(colored)
+                    degreeList.remove(v)
+                else:
+                    match = False
+                    adjacent = self.graph.neighborsOf(v[0])
+                    for cv in coloredList:
+                        if cv[0] in adjacent:
+                            match = True

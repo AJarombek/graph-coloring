@@ -31,7 +31,7 @@ class Graph(object):
     def vertexDegreeSet(self):
         vertexDegreeSet = set()
         for v in self.vertexSet:
-            length = self.degree(v)
-            vertexDegree = (v, length)
+            degree = self.degree(v)
+            vertexDegree = (v, degree)
             vertexDegreeSet.add(vertexDegree)
         return vertexDegreeSet
