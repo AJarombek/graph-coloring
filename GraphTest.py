@@ -11,5 +11,9 @@ def test():
     edgeSet = {(1,2), (2,3)}
     graph = Graph(vertexSet, edgeSet)
 
+    # Inspect the Graph
+    for v in graph.vertices():
+        print(v, "->", graph.neighborsOf(v))
+
 if __name__ == '__main__':
     test()

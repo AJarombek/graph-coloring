@@ -21,3 +21,17 @@ class Graph(object):
     # Get the neighboring vertices of a certain vertex in the grpah
     def neighborsOf(self, v):
         return self.adjacencyMap[v]
+
+    # Get the degree of a given vertex
+    def degree(self, v):
+        adjacent = self.neighborsOf(v)
+        return len(adjacent)
+
+    # Generate a set of vertices with their degrees
+    def vertexDegreeSet(self):
+        vertexDegreeSet = set()
+        for v in self.vertexSet:
+            length = self.degree(v)
+            vertexDegree = (v, length)
+            vertexDegreeSet.add(vertexDegree)
+        return vertexDegreeSet
