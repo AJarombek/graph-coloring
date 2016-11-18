@@ -21,19 +21,36 @@ class GraphColorings(object):
                             key=lambda x: x[1])
 
         coloredList = list()
-        colors = list()
         usedColors = 0
-        colors.append(usedColors)
 
+        # Continue to assign colors while the degreeList isn't empty
         while len(degreeList) != 0:
+
+            # Always add the first item in the degreeList to an unused color
+            largestDegree = degreeList[0]
+            colored = (largestDegree[0], usedColors)
+            coloredList.append(colored)
+            degreeList.remove(largestDegree)
+
+            # Go through all vertices in the degree list and look for adjacent
+            # vertices with colorings matching the one we wish to apply.  If no
+            # match is found, we can apply the color and remove the vertex from
+            # the degreeList
             for v in degreeList:
-                if len(coloredList) == 0:
+                match = False
+                adjacent = self.graph.neighborsOf(v[0])
+                for cv in coloredList:
+                    if cv[0] in adjacent and cv[1] is usedColors:
+                        # If there is a match set match to true and stop
+                        # searching for matches
+                        match = True
+                        break
+                if not match:
                     colored = (v[0], usedColors)
                     coloredList.append(colored)
                     degreeList.remove(v)
-                else:
-                    match = False
-                    adjacent = self.graph.neighborsOf(v[0])
-                    for cv in coloredList:
-                        if cv[0] in adjacent:
-                            match = True
+
+            # All vertices checked, move to the next color
+            usedColors += 1
+
+        return coloredList
