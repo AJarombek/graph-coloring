@@ -86,6 +86,11 @@ class GraphColorings(object):
 
         coloredList = list()
 
+        # Add the vertex with highest degree to the colored list
+        coloredVertex = (degreeList[0][0], 1)
+        coloredList.append(coloredVertex)
+        degreeList.pop(0)
+
         # Create a list of vertex saturation degrees
         # saturationDegreeList -> list((vertex,degree,saturationDegree,list(adjacentColors)))
         saturationDegreeList = list()
@@ -93,15 +98,32 @@ class GraphColorings(object):
             satDegree = (vertex[0], vertex[1], 0, list())
             saturationDegreeList.append(satDegree)
 
+        # Update the saturationDegreeList for the first colored vertex
+        saturationDegreeList = self.findSaturationDegree(coloredVertex[0], 1, saturationDegreeList)
+
+        while len(saturationDegreeList) is not 0:
+            vertex = saturationDegreeList.pop(0)
+            usedColors = vertex[3]
+            for color in colors:
+                if color not in usedColors:
+                    coloredVertex = (vertex[0], color)
+                    coloredList.append(coloredVertex)
+                    saturationDegreeList = self.findSaturationDegree(vertex[0], color, saturationDegreeList)
+                    break
+
+        return coloredList
+
     # Helper function for Brelaz algorithm to find the saturation degrees
     # of the unused vertices after a vertex is colored
     def findSaturationDegree(self, vertex, color, saturationDegreeList):
         adjacent = self.graph.neighborsOf(vertex)
         for saturation in saturationDegreeList:
             if saturation[0] in adjacent:
-                if color not in saturation[2]:
+                if color not in saturation[3]:
                     saturation[3].append(color)
                     saturation[2] += 1
 
+        # Sort the Saturation Degree List by Saturation Degree With Degree as the tiebreaker
         saturationDegreeList = sorted(saturationDegreeList, reverse=True,
-                                      key=lambda x: x[2])
+                                      key=lambda x: (x[2], x[1]))
+        return saturationDegreeList
