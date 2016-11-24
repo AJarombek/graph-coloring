@@ -13,6 +13,7 @@ def test():
     graphcoloring = GraphColorings(vertexSet, edgeSet)
 
     # Inspect the Graph
+    print("Adjacent Vertices:")
     for v in graphcoloring.graph.vertices():
         print(v, "->", graphcoloring.graph.neighborsOf(v))
 
