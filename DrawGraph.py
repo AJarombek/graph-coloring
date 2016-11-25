@@ -6,6 +6,7 @@ from GraphColorings import GraphColorings
 import matplotlib.pyplot as plt
 import networkx as nx
 import re
+import time
 
 class DrawGraph(object):
 
@@ -33,23 +34,59 @@ class DrawGraph(object):
             return nx.petersen_graph()
 
     def welshPowell(self):
+        label = "Welsh and Powell Algorithm"
+        print(label)
+        start = time.time()
         coloring = self.graph.welshPowell()
-        self.color(coloring)
+        elapsed = time.time() - start
+        print("Time Elapsed: ", elapsed)
+        coloringNumber = self.getColoringNumber(coloring)
+        print("Vertices: ", len(coloring))
+        print("Coloring Number: ", coloringNumber)
+        self.color(coloring, label)
 
     def brelaz(self):
+        label = "Brelaz Algorithm"
+        print(label)
+        start = time.time()
         coloring = self.graph.brelaz()
-        self.color(coloring)
+        elapsed = time.time() - start
+        print("Time Elapsed: ", elapsed)
+        coloringNumber = self.getColoringNumber(coloring)
+        print("Vertices: ", len(coloring))
+        print("Coloring Number: ", coloringNumber)
+        self.color(coloring, label)
 
     def dlf(self):
+        label = "DLF Algorithm"
+        print(label)
+        start = time.time()
         coloring = self.graph.DLF()
-        self.color(coloring)
+        elapsed = time.time() - start
+        print("Time Elapsed: ", elapsed)
+        coloringNumber = self.getColoringNumber(coloring)
+        print("Vertices: ", len(coloring))
+        print("Coloring Number: ", coloringNumber)
+        self.color(coloring, label)
 
-    def color(self, coloring):
+    def getColoringNumber(self, coloring):
+        colors = set()
+        for color in coloring:
+            colors.add(color[1])
+        return len(colors)
+
+    def color(self, coloring, label):
         valMap = {}
         for v in coloring:
             valMap[v[0]] = (v[1] / 100)
 
+        coloringMap = {}
+        for v in coloring:
+            coloringMap[v[0]] = v[1]
+
         values = [valMap.get(node, 0.25) for node in self.graph.graph.vertices()]
 
-        nx.draw(self.nxgraph, cmap=plt.get_cmap('jet'), node_color=values, pos=nx.circular_layout(self.nxgraph))
+        nx.draw_networkx(self.nxgraph, cmap=plt.get_cmap('jet'), node_color=values,
+                         pos=nx.circular_layout(self.nxgraph), labels=coloringMap,
+                         font_color='w', font_weight='bold')
         plt.show()
