@@ -178,16 +178,16 @@ class GraphColorings(object):
                 random = randint(1,100)
                 vertex[3] = random
 
+            # Sort the list of tuples using a lambda function
+            # Sorted by Degree with the Random Number as a tiebreaker
+            vertexParamList = sorted(vertexParamList, reverse=True,
+                                     key=lambda x: (x[1], x[2]))
+
             # Set the values for the vertex priority
             priority = 0
             for index in range(0, len(vertexParamList)):
                 vertexParamList[index][1] = index
                 priority += 1
-
-            # Sort the list of tuples using a lambda function
-            # Sorted by Degree with the Random Number as a tiebreaker
-            vertexParamList = sorted(vertexParamList, reverse=True,
-                                     key=lambda x: (x[1], x[2]))
 
             # Assume that the coloring is now valid
             validColoring = True
@@ -208,7 +208,7 @@ class GraphColorings(object):
 
                 if proposedColor in neighborsProposedColors and not highestPriority:
                     validColoring = False
-                    while proposedColor in neighborsProposedColors:
+                    while vertex[5] in neighborsProposedColors:
                         vertex[5] += 1
 
         # There is a valid coloring
