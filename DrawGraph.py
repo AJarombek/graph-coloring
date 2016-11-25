@@ -2,36 +2,53 @@
 # Date: 11/25/2016
 # Draws the Graphs using Matplotlib and Networkx
 
-from Graph import Graph
 from GraphColorings import GraphColorings
 import matplotlib.pyplot as plt
 import networkx as nx
 
-# Create a K5 Graph
-# Same as doing nx.complete_graph(5)
-K5 = nx.Graph()
-K5.add_nodes_from([1,5])
-K5.add_edges_from([(1,2),(1,3),(1,4),(1,5),(2,3),(2,4),(2,5),(3,4),(3,5),(4,5)])
+class DrawGraph(object):
 
-vertices = set(K5.nodes())
-edges = set(K5.edges())
+    def __init__(self, type):
+        self.nxgraph = self.generate(type)
+        self.graph = GraphColorings(self.nxgraph.nodes(), self.nxgraph.edges())
 
-K5Coloring = GraphColorings(vertices, edges)
+    def generate(self, type):
+        graphType = type[0]
+        graphBlueprint = type[1]
 
-# Create a Petersen Graph
-# Peterson = nx.petersen_graph()
+        if graphType == 'Kn':
+            return nx.complete_graph(graphBlueprint[1:])
 
-# vertices = set(Peterson.nodes())
-# edges = set(Peterson.edges())
+        elif graphType == 'Kn_n':
+            if type(graphBlueprint[2]) is int:
+                first = graphBlueprint[1:3]
+                second = graphBlueprint[4:]
+            else:
+                first = graphBlueprint[1]
+                second = graphBlueprint[3:]
+            return nx.complete_bipartite_graph(first, second)
 
-# PetersonColoring = GraphColorings(vertices, edges)
+        elif graphType == 'Petersen':
+            return nx.petersen_graph()
 
-coloring = K5Coloring.welshPowell()
-valMap = {}
-for v in coloring:
-    valMap[v[0]] = (v[1] / 100)
+    def welshPowell(self):
+        coloring = self.graph.welshPowell()
+        self.color(coloring)
 
-values = [valMap.get(node, 0.25) for node in K5Coloring.graph.vertices()]
+    def brelaz(self):
+        coloring = self.graph.brelaz()
+        self.color(coloring)
 
-nx.draw(K5, cmap=plt.get_cmap('jet'), node_color=values, pos=nx.circular_layout(K5))
-plt.show()
+    def dlf(self):
+        coloring = self.graph.DLF()
+        self.color(coloring)
+
+    def color(self, coloring):
+        valMap = {}
+        for v in coloring:
+            valMap[v[0]] = (v[1] / 100)
+
+        values = [valMap.get(node, 0.25) for node in self.graph.graph.vertices()]
+
+        nx.draw(self.nxgraph, cmap=plt.get_cmap('jet'), node_color=values, pos=nx.circular_layout(self.nxgraph))
+        plt.show()
