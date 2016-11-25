@@ -3,6 +3,7 @@
 # Contains all of the algorithms for determining graph colorings
 
 from Graph import Graph
+from random import randint
 
 class GraphColorings(object):
 
@@ -131,3 +132,45 @@ class GraphColorings(object):
         saturationDegreeList = sorted(saturationDegreeList, reverse=True,
                                       key=lambda x: (x[2], x[1]))
         return saturationDegreeList
+
+    # Graph Coloring Algorithm #3 - DLF
+    # Every vertex has 3 parameters:
+    # 1. The degree of the vertex deg(v)
+    # 2. A random value which is generated locally and independently rndvalue(v)
+    # 3. A list of forbidden colors that have been used by adjacent vertices
+    # usedcolor(v) - initially is empty
+    # Within each round every uncolored vertex v follows the same 5 steps
+    # 1. Choose parameter rndvalue(v) uniformly distributed on[0…1].
+    # 2. Send to all of the neighboring vertices deg(v) rndvalue(v) and the
+    # first legal color (not on the list of v’s forbidden colors)
+    # 3. Compare the parameters of v to the parameters of its neighbors to see
+    # which vertex has the highest priority
+    # 4. If vertex v’s proposed color does not clash with proposals from its neighbors or
+    # if v has the highest priority among its neighbors keep the proposed color on v, send
+    # message to the neighbors and stop.
+    # 5. If not update the list usedcolor(v).
+    def DLF(self):
+        degreeSet = self.graph.vertexDegreeSet()
+
+        # degreeList -> list((vertex,degree))
+        degreeList = list(degreeSet)
+
+        # vertexParamList -> list((vertex,degree,random,list(usedColors)))
+        vertexParamList = []
+
+        # populate the vertexParamList
+        for vertex in degreeList:
+            random = randint(1,10)
+            usedColors = []
+            vertexParam = (vertex[0], vertex[1], random, usedColors)
+            vertexParamList.append(vertexParam)
+
+        # Sort the list of tuples using a lambda function
+        # Sorted by Degree with the Random Number as a tiebreaker
+        vertexParamList = sorted(vertexParamList, reverse=True,
+                                 key=lambda x: (x[1], x[2]))
+
+        # Create a list of potential colors
+        colors = []
+        for val in range(0, len(degreeList) - 1):
+            colors.append(val)
