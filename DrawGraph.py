@@ -29,7 +29,7 @@ K5Coloring = GraphColorings(vertices, edges)
 coloring = K5Coloring.welshPowell()
 valMap = {}
 for v in coloring:
-    valMap[v[0]] = (v[1] / 20)
+    valMap[v[0]] = (v[1] / 100)
 
 values = [valMap.get(node, 0.25) for node in K5Coloring.graph.vertices()]
 
