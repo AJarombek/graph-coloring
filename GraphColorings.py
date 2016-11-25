@@ -80,32 +80,32 @@ class GraphColorings(object):
                             key=lambda x: x[1])
 
         # Create a list of potential colors
-        colors = list()
-        for val in range(1, len(degreeList)):
+        colors = []
+        for val in range(0, len(degreeList) - 1):
             colors.append(val)
 
         coloredList = list()
 
         # Add the vertex with highest degree to the colored list
-        coloredVertex = (degreeList[0][0], 1)
+        coloredVertex = (degreeList[0][0], 0)
         coloredList.append(coloredVertex)
         degreeList.pop(0)
 
         # Create a list of vertex saturation degrees
         # saturationDegreeList -> list((vertex,degree,saturationDegree,list(adjacentColors)))
-        saturationDegreeList = list()
+        saturationDegreeList = []
         for vertex in degreeList:
-            satDegree = (vertex[0], vertex[1], 0, list())
+            satDegree = (vertex[0], vertex[1], 0, [])
             saturationDegreeList.append(satDegree)
 
         # Update the saturationDegreeList for the first colored vertex
-        saturationDegreeList = self.findSaturationDegree(coloredVertex[0], 1, saturationDegreeList)
+        saturationDegreeList = self.findSaturationDegree(coloredVertex[0], 0, saturationDegreeList)
 
         while len(saturationDegreeList) is not 0:
             vertex = saturationDegreeList.pop(0)
             usedColors = vertex[3]
             for color in colors:
-                if color not in usedColors:
+                if usedColors and color not in usedColors:
                     coloredVertex = (vertex[0], color)
                     coloredList.append(coloredVertex)
                     saturationDegreeList = self.findSaturationDegree(vertex[0], color, saturationDegreeList)
@@ -117,11 +117,15 @@ class GraphColorings(object):
     # of the unused vertices after a vertex is colored
     def findSaturationDegree(self, vertex, color, saturationDegreeList):
         adjacent = self.graph.neighborsOf(vertex)
+        index = 0
         for saturation in saturationDegreeList:
             if saturation[0] in adjacent:
                 if color not in saturation[3]:
-                    saturation[3].append(color)
-                    saturation[2] += 1
+                    satDegList = saturation[3]
+                    satDegList.append(color)
+                    satDeg = saturation[2] + 1
+                    saturationDegreeList[index] = (saturation[0], saturation[1], satDeg, satDegList)
+            index += 1
 
         # Sort the Saturation Degree List by Saturation Degree With Degree as the tiebreaker
         saturationDegreeList = sorted(saturationDegreeList, reverse=True,
