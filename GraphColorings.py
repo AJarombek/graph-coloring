@@ -82,7 +82,7 @@ class GraphColorings(object):
 
         # Create a list of potential colors
         colors = []
-        for val in range(0, len(degreeList) - 1):
+        for val in range(0, len(degreeList)):
             colors.append(val)
 
         coloredList = []
@@ -166,7 +166,7 @@ class GraphColorings(object):
 
         # Create a list of potential colors
         colors = []
-        for val in range(0, len(degreeList) - 1):
+        for val in range(0, len(degreeList)):
             colors.append(val)
 
         # Continue to loop until all of the vertices have valid colorings
