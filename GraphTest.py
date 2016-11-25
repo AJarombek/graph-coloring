@@ -29,6 +29,12 @@ def test():
     for v in coloring:
         print(v[0], "-->", v[1])
 
+    # Test the DLF Graph Coloring Algorithm
+    coloring = graphcoloring.DLF()
+    print("DLF Graph Coloring:")
+    for v in coloring:
+        print(v[0], "-->", v[1])
+
 
 if __name__ == '__main__':
     test()

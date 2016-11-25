@@ -85,7 +85,7 @@ class GraphColorings(object):
         for val in range(0, len(degreeList) - 1):
             colors.append(val)
 
-        coloredList = list()
+        coloredList = []
 
         # Add the vertex with highest degree to the colored list
         coloredVertex = (degreeList[0][0], 0)
@@ -155,22 +155,66 @@ class GraphColorings(object):
         # degreeList -> list((vertex,degree))
         degreeList = list(degreeSet)
 
-        # vertexParamList -> list((vertex,degree,random,list(usedColors)))
+        # vertexParamList -> list(list(vertex,priority,degree,random,list(usedColors),firstValidColor))
         vertexParamList = []
 
         # populate the vertexParamList
         for vertex in degreeList:
-            random = randint(1,10)
             usedColors = []
-            vertexParam = (vertex[0], vertex[1], random, usedColors)
+            vertexParam = [vertex[0], 0, vertex[1], 0, usedColors, 0]
             vertexParamList.append(vertexParam)
-
-        # Sort the list of tuples using a lambda function
-        # Sorted by Degree with the Random Number as a tiebreaker
-        vertexParamList = sorted(vertexParamList, reverse=True,
-                                 key=lambda x: (x[1], x[2]))
 
         # Create a list of potential colors
         colors = []
         for val in range(0, len(degreeList) - 1):
             colors.append(val)
+
+        # Continue to loop until all of the vertices have valid colorings
+        validColoring = False
+        while not validColoring:
+
+            # Generate new random values for the vertexParamList
+            for vertex in vertexParamList:
+                random = randint(1,100)
+                vertex[3] = random
+
+            # Set the values for the vertex priority
+            priority = 0
+            for index in range(0, len(vertexParamList)):
+                vertexParamList[index][1] = index
+                priority += 1
+
+            # Sort the list of tuples using a lambda function
+            # Sorted by Degree with the Random Number as a tiebreaker
+            vertexParamList = sorted(vertexParamList, reverse=True,
+                                     key=lambda x: (x[1], x[2]))
+
+            # Assume that the coloring is now valid
+            validColoring = True
+
+            for vertex in vertexParamList:
+                neighbors = self.graph.neighborsOf(vertex[0])
+                proposedColor = vertex[5]
+                highestPriority = True
+                neighborsProposedColors = []
+                for neighborVertex in vertexParamList:
+                    if neighborVertex[0] in neighbors:
+                        # Here we have a vertex and one of its neighbors
+                        # Check to see if this vertex still has priority and update the
+                        # neighbors proposed colors
+                        if neighborVertex[1] > vertex[1]:
+                            highestPriority = False
+                        neighborsProposedColors.append(neighborVertex[5])
+
+                if proposedColor in neighborsProposedColors and not highestPriority:
+                    validColoring = False
+                    while proposedColor in neighborsProposedColors:
+                        vertex[5] += 1
+
+        # There is a valid coloring
+        coloredList = []
+        for vertex in vertexParamList:
+            coloredVertex = (vertex[0], vertex[5])
+            coloredList.append(coloredVertex)
+
+        return coloredList
