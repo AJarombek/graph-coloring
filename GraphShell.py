@@ -42,7 +42,9 @@ def execute():
 
     if algorithm == 'all':
         drawgraph.welshPowell()
+        next()
         drawgraph.brelaz()
+        next()
         drawgraph.dlf()
         return
 
@@ -57,6 +59,14 @@ def execute():
     elif algorithm == 'dlf':
         drawgraph.dlf()
         return
+
+
+# Helper function to ask the user if they would like to continue
+def next():
+    while True:
+        command = input("Type 'next' to continue:")
+        if command == 'next':
+            return
 
 
 def pickGraph():

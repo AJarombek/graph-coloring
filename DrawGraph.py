@@ -5,6 +5,7 @@
 from GraphColorings import GraphColorings
 import matplotlib.pyplot as plt
 import networkx as nx
+import re
 
 class DrawGraph(object):
 
@@ -20,12 +21,12 @@ class DrawGraph(object):
             return nx.complete_graph(int(graphBlueprint[1:]))
 
         elif graphType == 'Kn_n':
-            if type(graphBlueprint[2]) is int:
-                first = graphBlueprint[1:3]
-                second = graphBlueprint[4:]
+            if re.match("^\d$", graphBlueprint[2]):
+                first = int(graphBlueprint[1:3])
+                second = int(graphBlueprint[4:])
             else:
-                first = graphBlueprint[1]
-                second = graphBlueprint[3:]
+                first = int(graphBlueprint[1])
+                second = int(graphBlueprint[3:])
             return nx.complete_bipartite_graph(first, second)
 
         elif graphType == 'Petersen':
