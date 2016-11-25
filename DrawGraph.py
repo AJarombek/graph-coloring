@@ -17,7 +17,7 @@ class DrawGraph(object):
         graphBlueprint = type[1]
 
         if graphType == 'Kn':
-            return nx.complete_graph(graphBlueprint[1:])
+            return nx.complete_graph(int(graphBlueprint[1:]))
 
         elif graphType == 'Kn_n':
             if type(graphBlueprint[2]) is int:

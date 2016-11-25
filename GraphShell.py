@@ -3,6 +3,8 @@
 # Interactive Shell for Using the Graph Coloring Algorithms
 
 import re
+from DrawGraph import DrawGraph
+
 
 def shell():
     done = False
@@ -26,6 +28,7 @@ def shell():
             continue
     print("Goodbye!")
 
+
 def execute():
     graph = pickGraph()
     if graph is None:
@@ -33,6 +36,26 @@ def execute():
 
     algorithm = pickAlgorithm()
     if algorithm is None:
+        return
+
+    drawgraph = DrawGraph(graph)
+
+    if algorithm == 'all':
+        drawgraph.welshPowell()
+        drawgraph.brelaz()
+        drawgraph.dlf()
+        return
+
+    elif algorithm == 'welshpowell':
+        drawgraph.welshPowell()
+        return
+
+    elif algorithm == 'brelaz':
+        drawgraph.brelaz()
+        return
+
+    elif algorithm == 'dlf':
+        drawgraph.dlf()
         return
 
 
@@ -48,11 +71,12 @@ def pickGraph():
         return None
 
     elif valid:
-        return graph
+        return valid
 
     else:
         print("Invalid Graph.")
         return pickGraph()
+
 
 def validGraph(graph):
     Knregex = "^K\d{1,2}$"
@@ -72,6 +96,7 @@ def validGraph(graph):
     else:
         return None
 
+
 def pickAlgorithm():
     algorithm = input("Pick an Algorithm:").lower()
 
@@ -82,21 +107,13 @@ def pickAlgorithm():
     elif algorithm == 'back':
         return None
 
-    elif algorithm == 'all':
-        return 0
-
-    elif algorithm == 'welshpowell':
-        return 1
-
-    elif algorithm == 'brelaz':
-        return 2
-
-    elif algorithm == 'dlf':
-        return 3
+    elif algorithm == 'all' or algorithm == 'welshpowell' or algorithm == 'brelaz' or algorithm == 'dlf':
+        return algorithm
 
     else:
         print("Invalid Algorithm.")
         return pickAlgorithm()
+
 
 # Function displays help messages
 def help(location=None):
