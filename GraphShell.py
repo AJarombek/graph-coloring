@@ -6,19 +6,24 @@ import re
 from DrawGraph import DrawGraph
 
 
+# Method for the command line shell to execute coloring algorithms
 def shell():
+    # Keep the shell running until the user specifically says to quit
     done = False
     print("Graph Shell 1.0 \nType 'help' for more information")
     while not done:
         command = input("> ")
+        # Quit the shell command
         if command == 'quit':
             done = True
             continue
 
+        # Display help infomation command
         elif command == 'help':
             help()
             continue
 
+        # Execute coloring algorithm command
         elif command == 'exec':
             execute()
             continue
@@ -29,17 +34,22 @@ def shell():
     print("Goodbye!")
 
 
+# Method for executing coloring graph algorithms
 def execute():
+    # Fist pick a specific graph to execute the algorithms on
     graph = pickGraph()
     if graph is None:
         return
 
+    # Second pick the algorithm you want to use
     algorithm = pickAlgorithm()
     if algorithm is None:
         return
 
+    # Create an instance of the graph using DrawGraph
     drawgraph = DrawGraph(graph)
 
+    # If the user selects all algorithms iterate through them
     if algorithm == 'all':
         drawgraph.welshPowell()
         next()
@@ -48,6 +58,7 @@ def execute():
         drawgraph.dlf()
         return
 
+    # Otherwise execute that specific algorithm
     elif algorithm == 'welshpowell':
         drawgraph.welshPowell()
         return
@@ -69,34 +80,46 @@ def next():
             return
 
 
+# Function for picking a graph type
 def pickGraph():
     graph = input("Pick a Graph Type:")
+
+    # Once submitted make sure it is a valid graph
     valid = validGraph(graph)
 
+    # Command for the help information
     if graph == 'help':
         help(location="exec")
         return pickGraph()
 
+    # Command to go back to the main shell
     elif graph == 'back':
         return None
 
+    # Otherwise check if the valid submitted is valid
+    # If it is valid return it
     elif valid:
         return valid
 
+    # Otherwise display error message saying it is invalid and let the user try again
     else:
         print("Invalid Graph.")
         return pickGraph()
 
 
+# Function to check whether the graph submitted by the user is valid
 def validGraph(graph):
+    # Valid regular expressions for matching
     Knregex = "^K\d{1,2}$"
     Kn_nregex = "^K\d{1,2}_\d{1,2}$"
     petersenregex = "^Petersen$"
 
+    # Try to match the regular expressions
     matchKn = re.match(Knregex, graph, re.I)
     matchKn_n = re.match(Kn_nregex, graph, re.I)
     matchPetersen = re.match(petersenregex, graph, re.I)
 
+    # If there is a valid match, return the graphType and graphBlueprint
     if matchKn:
         return ['Kn', graph]
     elif matchKn_n:
@@ -107,16 +130,20 @@ def validGraph(graph):
         return None
 
 
+# Function to pick a coloring algorithm
 def pickAlgorithm():
     algorithm = input("Pick an Algorithm:").lower()
 
+    # Command for the help information
     if algorithm == 'help':
         help(location="exec")
         return pickAlgorithm()
 
+    # Command to go back to the main shell
     elif algorithm == 'back':
         return None
 
+    # If a valid algorithm is entered, return it
     elif algorithm == 'all' or algorithm == 'welshpowell' or algorithm == 'brelaz' or algorithm == 'dlf':
         return algorithm
 
